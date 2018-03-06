@@ -54,8 +54,7 @@ public class DataTypeTest extends CCMBridge.PerClassSingleNodeCluster {
 
     private final static Collection<String> COLLECTION_INSERT_STATEMENTS = getCollectionInsertStatements();
     private final static HashMap<DataType, String> COLLECTION_SELECT_STATEMENTS = getCollectionSelectStatements();
-
-
+    private final CodecRegistry codecRegistry = new CodecRegistry();
     private static boolean exclude(DataType t) {
         return t.getName() == DataType.Name.COUNTER;
     }
@@ -487,17 +486,18 @@ public class DataTypeTest extends CCMBridge.PerClassSingleNodeCluster {
                 continue;
 
             Object value = TestUtils.getFixedValue(dt);
-            assertEquals(dt.deserialize(dt.serialize(value, ProtocolVersion.V3)), value);
+            assertEquals(codecRegistry.codecFor(dt).deserialize(codecRegistry.codecFor(dt).serialize(value, ProtocolVersion.V3),ProtocolVersion.NEWEST_SUPPORTED), value);
         }
 
         try {
-            DataType.bigint().serialize(4);
+            codecRegistry.codecFor(DataType.bigint()).serialize(4,ProtocolVersion.NEWEST_SUPPORTED);
+
             fail("This should not have worked");
         } catch (InvalidTypeException e) { /* That's what we want */ }
 
         try {
             ByteBuffer badValue = ByteBuffer.allocate(4);
-            DataType.bigint().deserialize(badValue);
+            codecRegistry.codecFor(DataType.bigint()).deserialize(badValue,ProtocolVersion.NEWEST_SUPPORTED);
             fail("This should not have worked");
         } catch (InvalidTypeException e) { /* That's what we want */ }
     }
@@ -508,10 +508,10 @@ public class DataTypeTest extends CCMBridge.PerClassSingleNodeCluster {
         List<String> l = Arrays.asList("foo", "bar");
 
         DataType dt = DataType.list(DataType.text());
-        assertEquals(dt.deserialize(dt.serialize(l, ProtocolVersion.V3)), l);
+        assertEquals(codecRegistry.codecFor(dt).deserialize(codecRegistry.codecFor(dt).serialize(l, ProtocolVersion.V3),ProtocolVersion.NEWEST_SUPPORTED), l);
 
         try {
-            DataType.list(DataType.bigint()).serialize(l, ProtocolVersion.V3);
+            codecRegistry.codecFor(DataType.list(DataType.bigint())).serialize(l, ProtocolVersion.V3);
             fail("This should not have worked");
         } catch (InvalidTypeException e) { /* That's what we want */ }
     }

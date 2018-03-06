@@ -40,6 +40,7 @@ public abstract class TestUtils {
 
     public static final String INSERT_FORMAT = "INSERT INTO %s (k, t, i, f) VALUES ('%s', '%s', %d, %f)";
     public static final String SELECT_ALL_FORMAT = "SELECT * FROM %s";
+    private static final CodecRegistry codecRegistry = new CodecRegistry();
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static BoundStatement setBoundValue(BoundStatement bs, String name, DataType type, Object value) {
@@ -78,7 +79,7 @@ public abstract class TestUtils {
                 bs.setString(name, (String)value);
                 break;
             case TIMESTAMP:
-                bs.setDate(name, (Date)value);
+                bs.setDate(name, LocalDate.fromMillisSinceEpoch(((Date)value).getTime()));
                 break;
             case UUID:
                 bs.setUUID(name, (UUID)value);
@@ -142,11 +143,11 @@ public abstract class TestUtils {
             case TIMEUUID:
                 return row.getUUID(name);
             case LIST:
-                return row.getList(name, type.getTypeArguments().get(0).asJavaClass());
+                return row.getList(name, codecRegistry.codecFor(type.getTypeArguments().get(0)).getJavaType().getRawType());
             case SET:
-                return row.getSet(name, type.getTypeArguments().get(0).asJavaClass());
+                return row.getSet(name, codecRegistry.codecFor(type.getTypeArguments().get(0)).getJavaType().getRawType());
             case MAP:
-                return row.getMap(name, type.getTypeArguments().get(0).asJavaClass(), type.getTypeArguments().get(1).asJavaClass());
+                return row.getMap(name, codecRegistry.codecFor(type.getTypeArguments().get(0)).getJavaType().getRawType(), codecRegistry.codecFor(type.getTypeArguments().get(1)).getJavaType().getRawType());
         }
         throw new RuntimeException("Missing handling of " + type);
     }
@@ -312,7 +313,7 @@ public abstract class TestUtils {
         // keep alive kicks in, but that's a fairly long time. So we cheat and trigger a force
         // the detection by forcing a request.
         if (waitForDead || waitForOut)
-            cluster.manager.submitSchemaRefresh(null, null,null);
+            cluster.manager.submitSchemaRefresh(null, null,null,null);
 
         InetAddress address;
         try {
