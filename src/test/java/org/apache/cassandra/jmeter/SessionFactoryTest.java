@@ -14,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -62,7 +63,7 @@ public class SessionFactoryTest extends CCMBridge.PerClassSingleNodeCluster {
     public void testConnectionNoKSNoLB() throws UnknownHostException {
 
         Session session = CassandraSessionFactory.createSession("testsession",
-                Sets.newHashSet(InetAddress.getByName(NODE_1_IP)),null,null,null,null);
+                Sets.newHashSet(InetSocketAddress.createUnresolved(NODE_1_IP, 9042)),null,null,null,null);
 
         assertNotNull(session);
 
@@ -81,7 +82,7 @@ public class SessionFactoryTest extends CCMBridge.PerClassSingleNodeCluster {
     @Test
     public void testSecondConnection() throws UnknownHostException {
 
-        Session session = CassandraSessionFactory.createSession("testsession",Sets.newHashSet(InetAddress.getByName(NODE_1_IP)),null,null,null,null);
+        Session session = CassandraSessionFactory.createSession("testsession",Sets.newHashSet(InetSocketAddress.createUnresolved(NODE_1_IP, 9042)),null,null,null,null);
 
         assertNotNull(session);
 
@@ -90,7 +91,7 @@ public class SessionFactoryTest extends CCMBridge.PerClassSingleNodeCluster {
 
         assertEquals(clusterName,"test");
 
-        Session session2 = CassandraSessionFactory.createSession("testsession", Sets.newHashSet(InetAddress.getByName(NODE_1_IP)),null,null,null,null);
+        Session session2 = CassandraSessionFactory.createSession("testsession", Sets.newHashSet(InetSocketAddress.createUnresolved(NODE_1_IP, 9042)),null,null,null,null);
 
         // Did we get back the same session?
         assertEquals(session, session2);

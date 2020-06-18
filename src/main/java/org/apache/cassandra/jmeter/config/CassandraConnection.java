@@ -51,6 +51,8 @@ public class CassandraConnection extends AbstractTestElement
 
     private final transient Set<InetAddress> contactPointsI = new HashSet<InetAddress>();
     private final transient Set<InetSocketAddress> contactPointsIS = new HashSet<InetSocketAddress>();
+    
+    private Integer portNumber = 9042;
 
     // TODO - Add Port Number
 
@@ -98,7 +100,7 @@ public class CassandraConnection extends AbstractTestElement
             loadBalancingPolicy = null;
         }
 
-        Session session = CassandraSessionFactory.createSession(sessionName, contactPointsI, keyspace, username, password, loadBalancingPolicy);
+        Session session = CassandraSessionFactory.createSession(sessionName, contactPointsIS, keyspace, username, password, loadBalancingPolicy);
 
         variables.putObject(sessionName, session);
     }
@@ -156,7 +158,7 @@ public class CassandraConnection extends AbstractTestElement
         for (String contactPt : contactPoints.split(",")) {
             this.contactPointsI.add(InetAddress.getByName(contactPt));
             // TODO - 9160 should not really be hard coded.
-            this.contactPointsIS.add(new InetSocketAddress(contactPt, 9042));
+            this.contactPointsIS.add(new InetSocketAddress(contactPt, this.getPortNumber()));
         }
     }
 
@@ -229,4 +231,12 @@ public class CassandraConnection extends AbstractTestElement
     public void setLocalDataCenter(String localDataCenter) {
         this.localDataCenter = localDataCenter;
     }
+
+	public Integer getPortNumber() {
+		return portNumber;
+	}
+
+	public void setPortNumber(Integer portNumber) {
+		this.portNumber = portNumber;
+	}   
  }
