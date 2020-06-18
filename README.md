@@ -1,7 +1,7 @@
 # Cassandra JMeter Plugin for Cassandra
 
 ---
-A CQL3 native plugin for Cassandra 2.0 using the DataStax Java Driver for Apache Cassandra. The plugin is loosely based on the JDBC Plugin included with JMeter originally written by Ruben Laguna. It includes 4 components:
+A CQL3 native plugin for Cassandra 3.0 using the DataStax Java Driver for Apache Cassandra. The plugin is loosely based on the JDBC Plugin included with JMeter originally written by Ruben Laguna. It includes 4 components:
 
 - Cassandra Configuration
 - Cassandra Sampler
