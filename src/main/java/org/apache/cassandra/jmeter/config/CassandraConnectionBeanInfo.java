@@ -49,6 +49,10 @@ public class CassandraConnectionBeanInfo extends BeanInfoSupport {
         p = property("password", TypeEditor.PasswordEditor);
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
         p.setValue(DEFAULT, "");
+        
+        p = property("portNumber");
+        p.setValue(NOT_UNDEFINED, Boolean.TRUE);
+        p.setValue(DEFAULT, 9042);
 
         p = property("loadBalancer"); // $NON-NLS-1$
         p.setValue(NOT_UNDEFINED, Boolean.TRUE);
