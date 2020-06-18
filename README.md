@@ -25,7 +25,7 @@ Fields:
 - Password: Password for use with the PasswordAuthenticator
 
 
-![alt text](https://raw.githubusercontent.com/slowenthal/jmeter-cassandra/master/wiki/images/configScreenShot.png)
+![alt text](https://raw.githubusercontent.com/rahulrraja/jmeter-cassandra/master/wiki/images/configScreenShot.png)
 
 # Sampling
 
