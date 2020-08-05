@@ -47,6 +47,7 @@ public abstract class AbstractCassandaTestElement extends AbstractTestElement im
 
     private static final String COMMA = ","; // $NON-NLS-1$
     private static final char COMMA_CHAR = ',';
+    private static final char PIPE_CHAR = '|';
 
     private static final String UNDERSCORE = "_"; // $NON-NLS-1$
 
@@ -200,7 +201,8 @@ public abstract class AbstractCassandaTestElement extends AbstractTestElement im
 
         ColumnDefinitions colDefs = pstmt.preparedStatement().getVariables();
 
-        String[] arguments = CSVSaveService.csvSplitString(getQueryArguments(), COMMA_CHAR);
+        String[] arguments = CSVSaveService.csvSplitString(getQueryArguments(), PIPE_CHAR);
+
         if (arguments.length !=colDefs.size()) {
             // TODO - throw a non-transient exception here!
             throw new RuntimeException("number of arguments ("+arguments.length+") and number in stmt (" + colDefs.size() + ") are not equal");

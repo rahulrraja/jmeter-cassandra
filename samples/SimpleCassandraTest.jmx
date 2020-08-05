@@ -38,10 +38,32 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
+        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="DropKs" enabled="false">
+          <stringProp name="sessionName">ccm</stringProp>
+          <stringProp name="queryType">Simple Statement</stringProp>
+          <stringProp name="query">drop table ks2.t1;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="consistencyLevel">ONE</stringProp>
+          <stringProp name="batchSize"></stringProp>
+        </org.apache.cassandra.jmeter.sampler.CassandraSampler>
+        <hashTree/>
+        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="DescKs" enabled="false">
+          <stringProp name="sessionName">ccm</stringProp>
+          <stringProp name="queryType">Simple Statement</stringProp>
+          <stringProp name="query">DESC KEYSPACES</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="consistencyLevel">ONE</stringProp>
+          <stringProp name="batchSize"></stringProp>
+        </org.apache.cassandra.jmeter.sampler.CassandraSampler>
+        <hashTree/>
         <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="CreateKs" enabled="true">
           <stringProp name="sessionName">ccm</stringProp>
           <stringProp name="queryType">Simple Statement</stringProp>
-          <stringProp name="query">create keyspace ks2 with replication = {&apos;class&apos;:&apos;SimpleStrategy&apos;,&apos;replication_factor&apos;:1}</stringProp>
+          <stringProp name="query">create keyspace if not exists ks2 with replication = {&apos;class&apos;:&apos;SimpleStrategy&apos;,&apos;replication_factor&apos;:1}</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="variableNames"></stringProp>
           <stringProp name="resultVariable"></stringProp>
@@ -52,7 +74,7 @@
         <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="CreateTable" enabled="true">
           <stringProp name="sessionName">ccm</stringProp>
           <stringProp name="queryType">Simple Statement</stringProp>
-          <stringProp name="query">create table ks2.t1 (c1 int primary key, c2 text, c3 timestamp)</stringProp>
+          <stringProp name="query">create table if not exists ks2.t1 (c1 int primary key, c2 set&lt;text&gt;)</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="variableNames"></stringProp>
           <stringProp name="resultVariable"></stringProp>
@@ -60,10 +82,32 @@
           <stringProp name="batchSize"></stringProp>
         </org.apache.cassandra.jmeter.sampler.CassandraSampler>
         <hashTree/>
-        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="InsertTable" enabled="true">
+        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="InsertTable" enabled="false">
           <stringProp name="sessionName">ccm</stringProp>
           <stringProp name="queryType">Simple Statement</stringProp>
-          <stringProp name="query">insert into ks1.t1 (c1,c2,c3) values (1,&apos;One&apos;, &apos;2014-03-14&apos;);</stringProp>
+          <stringProp name="query">insert into ks2.t1 (c1,c2) values (1,{&apos;hello&apos;,&apos;hello2&apos;,&apos;hello3&apos;,&apos;hello4&apos;});</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="consistencyLevel">ONE</stringProp>
+          <stringProp name="batchSize"></stringProp>
+        </org.apache.cassandra.jmeter.sampler.CassandraSampler>
+        <hashTree/>
+        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="InsertTablePreparedStatement" enabled="true">
+          <stringProp name="sessionName">ccm</stringProp>
+          <stringProp name="queryType">Prepared Statement</stringProp>
+          <stringProp name="query">insert into ks2.t1 (c1,c2) values(?,?);</stringProp>
+          <stringProp name="queryArguments">1|{&apos;hello&apos;,&apos;hello2&apos;,&apos;hello3&apos;,&apos;HELLO4&apos;}</stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="consistencyLevel">ONE</stringProp>
+          <stringProp name="batchSize"></stringProp>
+        </org.apache.cassandra.jmeter.sampler.CassandraSampler>
+        <hashTree/>
+        <org.apache.cassandra.jmeter.sampler.CassandraSampler guiclass="TestBeanGUI" testclass="org.apache.cassandra.jmeter.sampler.CassandraSampler" testname="SelectTable" enabled="true">
+          <stringProp name="sessionName">ccm</stringProp>
+          <stringProp name="queryType">Simple Statement</stringProp>
+          <stringProp name="query">select * from ks2.t1;</stringProp>
           <stringProp name="queryArguments"></stringProp>
           <stringProp name="variableNames"></stringProp>
           <stringProp name="resultVariable"></stringProp>
