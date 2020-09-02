@@ -195,13 +195,37 @@ public abstract class AbstractCassandaTestElement extends AbstractTestElement im
     }
 
     private void setArguments(BoundStatement pstmt) throws IOException {
+        log.debug("in setArguments");
+
         if (getQueryArguments().trim().length()==0) {
             return;
         }
 
         ColumnDefinitions colDefs = pstmt.preparedStatement().getVariables();
 
+        log.debug(pstmt.preparedStatement().getQueryString());
+
+        if(pstmt.preparedStatement().getQueryString().indexOf("JSON") > -1 || pstmt.preparedStatement().getQueryString().indexOf("json") > -1 ) {
+            String arguments = getQueryArguments();
+
+            if(arguments.indexOf("#") > -1) {
+                String[] args = arguments.split("#");
+                log.debug("Split Length - " + args.length);
+                log.debug("Args - " + Arrays.toString(args));
+
+                for(int index=0; index < args.length; index++) {
+                    pstmt.setString(index, args[index]);
+                }
+
+            } else {
+                pstmt.setString(0, arguments);    
+            }            
+            return;
+        }
+
         String[] arguments = CSVSaveService.csvSplitString(getQueryArguments(), PIPE_CHAR);
+
+        log.debug(Arrays.toString(arguments));
 
         if (arguments.length !=colDefs.size()) {
             // TODO - throw a non-transient exception here!
@@ -270,8 +294,10 @@ public abstract class AbstractCassandaTestElement extends AbstractTestElement im
                     throw new RuntimeException("Unsupported Type: " + javaType);
 
             } catch (ParseException e) {
+                log.error(e.toString());
                 throw new RuntimeException("Could not Convert Argument #" + i + " \"" + argument + "\" to type" + javaType) ;
             } catch (NullPointerException e) {
+                log.error(e.toString());
                 throw new RuntimeException("Could not set argument no: "+(i+1)+" - missing parameter marker?");
             }
         }
